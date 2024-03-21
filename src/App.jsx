@@ -6,6 +6,8 @@ import SortTodos from './components/SortTodos';
 import Pagination from './components/Pagination';
 import axios from 'axios';
 
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/todos';
+
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [filteredTodos, setFilteredTodos] = useState([]);
@@ -20,7 +22,7 @@ const App = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/todos');
+      const response = await axios.get(apiUrl);
       setTodos(response.data);
       setFilteredTodos(response.data);
     } catch (error) {
@@ -30,7 +32,7 @@ const App = () => {
 
   const addTodo = async (todo) => {
     try {
-      const response = await axios.post('http://localhost:3001/todos', todo);
+      const response = await axios.post(apiUrl, todo);
       setTodos([...todos, response.data]);
       setFilteredTodos([...todos, response.data]);
     } catch (error) {
@@ -40,7 +42,7 @@ const App = () => {
 
   const deleteTodo = async (id) => {
     try {
-      await axios.delete(`http://localhost:3001/todos/${id}`);
+      await axios.delete(`${apiUrl}/${id}`);
       setTodos(todos.filter((todo) => todo.id !== id));
       setFilteredTodos(filteredTodos.filter((todo) => todo.id !== id));
     } catch (error) {
@@ -50,7 +52,7 @@ const App = () => {
 
   const updateTodo = async (id, updatedTodo) => {
     try {
-      const response = await axios.patch(`http://localhost:3001/todos/${id}`, updatedTodo);
+      const response = await axios.patch(`${apiUrl}/${id}`, updatedTodo);
       const updatedTodos = todos.map((todo) =>
         todo.id === id ? { ...todo, ...response.data } : todo
       );
